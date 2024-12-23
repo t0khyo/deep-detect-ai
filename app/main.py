@@ -25,19 +25,19 @@ async def hello():
     return {"message": "I hate Python!"}
 
 @app.post("/predict")
-async def predict(image1: UploadFile = File(...), image2: UploadFile = File(...)):
+async def predict(genuineSignature: UploadFile = File(...), signatureToVerify: UploadFile = File(...)):
     try:
         # Validate images existence
-        if not image1.file.readable or not image2.file:
-            raise HTTPException(status_code=400, detail="Both image1 and image2 must be provided.")
+        if not genuineSignature.file.readable or not signatureToVerify.file:
+            raise HTTPException(status_code=400, detail="Both genuineSignature and signatureToVerify images must be provided.")
 
         # Validate file types
-        if not image1.content_type.startswith('image') or not image2.content_type.startswith('image'):
+        if not genuineSignature.content_type.startswith('image') or not signatureToVerify.content_type.startswith('image'):
             raise HTTPException(status_code=400, detail="Both files must be valid image files.")
         
         # Open and preprocess the images
-        img1 = Image.open(BytesIO(await image1.read()))
-        img2 = Image.open(BytesIO(await image2.read()))
+        img1 = Image.open(BytesIO(await genuineSignature.read()))
+        img2 = Image.open(BytesIO(await signatureToVerify.read()))
 
         img1 = preprocess_img(img1)  # Preprocess image 1
         img2 = preprocess_img(img2)  # Preprocess image 2
