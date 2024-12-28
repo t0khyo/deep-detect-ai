@@ -1,0 +1,3 @@
+runtime: python310
+entrypoint: gunicorn -b :5000 app.main:app
+instance_class: F2
