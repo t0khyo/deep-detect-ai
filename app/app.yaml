@@ -1,3 +1,15 @@
 runtime: python310
-entrypoint: gunicorn -b :5000 app.main:app
-instance_class: F2
+
+env_variables:
+  FLASK_APP: "app.main"
+  FLASK_ENV: "production"
+
+entrypoint: gunicorn -b :$PORT app.main:app
+
+instance_class: F2  # You can change the instance class to suit your needs (F2, B2, etc.)
+
+handlers:
+  - url: /static
+    static_dir: static/
+  - url: /.*
+    script: auto
