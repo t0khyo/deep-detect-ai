@@ -1,5 +1,4 @@
-fastapi
-uvicorn
+Flask
 torch
 torchvision
 numpy

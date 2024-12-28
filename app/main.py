@@ -24,6 +24,11 @@ model_rms = load_model(model_path, device)
 def hello():
     return jsonify({"message": "I hate Python!"})
 
+@app.route('/', methods=['GET'])
+def root():
+    return jsonify({"message": "I hate Python!"})
+
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
