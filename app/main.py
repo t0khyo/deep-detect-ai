@@ -61,12 +61,12 @@ async def predict(genuineSignature: UploadFile = File(...), signatureToVerify: U
             probability_percentage = probability_percentage * 100
 
         return JSONResponse({
-            "similarityPercentage": f"{similarity_score:.2f}%",
-            "probabilityPercentage": f"{probability_percentage:.2f}%",
+            "similarityPercentage": f"{similarity_score:.2f}",
+            "probabilityPercentage": f"{probability_percentage:.2f}",
             "signatureWasNotForged": similarity_score > 80 and probability_percentage > 80
         })
 
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
-        return {"error": str(e)}
+        raise {"error": str(e)}
