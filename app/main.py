@@ -26,7 +26,7 @@ def hello():
 
 @app.route('/', methods=['GET'])
 def root():
-    return jsonify({"message": "I hate Python!"})
+    return jsonify({"message": "Hello, Deep Detect AI!"})
 
 
 @app.route('/predict', methods=['POST'])
