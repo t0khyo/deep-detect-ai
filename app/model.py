@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
 
-
 class ChannelAttention(nn.Module):
     def __init__(self, in_channels, reduction_ratio = 16):
         super(ChannelAttention, self).__init__()
@@ -90,10 +89,12 @@ class LogisticSiameseRegression(nn.Module):
         out = self.sigmoid(out)
         return out
 
-def load_model(model_path, device):
+def load_model(model_path_1, model_path_2, device):
     siamese_model = SiameseResNet()
     siamese_model = nn.DataParallel(siamese_model).to(device)
+    siamese_model.load_state_dict(torch.load(model_path_1, map_location=device, weights_only=True))
+
     model_rms = LogisticSiameseRegression(siamese_model).to(device)
-    model_rms.load_state_dict(torch.load(model_path, map_location=device))
+    model_rms.load_state_dict(torch.load(model_path_2, map_location=device, weights_only=True))
     model_rms.eval()
     return model_rms

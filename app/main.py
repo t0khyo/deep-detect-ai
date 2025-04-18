@@ -6,7 +6,6 @@ from torchvision import transforms
 from PIL import Image
 import torch
 from io import BytesIO
-
 from app.model import load_model
 from app.preprocess import preprocess_img
 
@@ -22,10 +21,13 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model_path = "./model/logistic_model_triangular_m09_ashoj3.pth"
-logger.info(f"Loading model from {model_path} on device {device}")
-model_rms = load_model(model_path, device)
-logger.info("Model loaded successfully.")
+model_path_1 = "./model/resnet50_triangular_m1_ashoj10"
+logger.info(f"Loading model from {model_path_1} on device {device}")
+
+model_path_2 = "./model/logistic_model_triangular_m09_ashoj3_v2.1.pth"
+logger.info(f"Loading model from {model_path_2} on device {device}")
+model_rms = load_model(model_path_1, model_path_2, device)
+logger.info("Models loaded successfully.")
 
 @app.route('/hello', methods=['GET'])
 def hello():
@@ -84,7 +86,7 @@ def predict():
         result = {
             "similarityPercentage": f"{similarity_score:.2f}",
             "probabilityPercentage": f"{probability_percentage:.2f}",
-            "signatureWasNotForged": similarity_score > 80 and probability_percentage > 80
+            "signatureWasNotForged": similarity_score > 92 and probability_percentage > 92
         }
 
         logger.info(f"Prediction result: {result}")
