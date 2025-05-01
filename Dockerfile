@@ -1,20 +1,30 @@
-# Use an official Python runtime as a parent image
+# Use an official Python base image with PyTorch (with or without CUDA)
 FROM python:3.10-slim
 
-# Set the working directory in the container
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Create app directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Install system dependencies (e.g., for PIL and Torch)
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install any needed packages specified in requirements.txt (from the app directory)
-RUN pip install -r app/requirements.txt
+# Copy requirements first for caching
+COPY requirements.txt .
 
-# Expose the port the app runs on
-EXPOSE 5000
+# Install Python dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Define environment variable for Flask to run
-ENV FLASK_APP=app.main
+# Copy the rest of the application
+COPY . .
 
-# Run the Flask app using gunicorn (recommended for production)
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app.main:app"]
+# Expose the port
+EXPOSE 8000
+
+# Run the app
+CMD ["python", "app/main.py"]
