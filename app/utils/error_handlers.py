@@ -18,6 +18,16 @@ class APIError(Exception):
         return rv
 
 def register_error_handlers(app):
+    @app.errorhandler(404)
+    def handle_404_error(error):
+        response = jsonify({
+            'message': 'The requested resource was not found. Please check the URL and try again.',
+            'status': 'error',
+            'code': 404
+        })
+        response.status_code = 404
+        return response
+
     @app.errorhandler(APIError)
     def handle_api_error(error):
         response = jsonify(error.to_dict())
