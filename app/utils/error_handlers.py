@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 from werkzeug.exceptions import HTTPException
 import logging
 
@@ -20,6 +20,7 @@ class APIError(Exception):
 def register_error_handlers(app):
     @app.errorhandler(404)
     def handle_404_error(error):
+        logger.warning(f"404 Not Found: {request.method} {request.url} - IP: {request.remote_addr}")
         response = jsonify({
             'message': 'The requested resource was not found. Please check the URL and try again.',
             'status': 'error',
