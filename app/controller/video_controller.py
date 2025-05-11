@@ -10,17 +10,30 @@ video_bp = Blueprint('video', __name__)
 video_service = None
 
 def init_video_model():
-    global video_service
-    model_path = os.path.join(current_app.config['MODEL_PATH'], "model_93_acc.pt")
-    logger.info(f"Loading video model from: {model_path}")
-    video_service = VideoService(model_path)
-    logger.info("Video model loaded successfully.")
+    try:
+        global video_service
+        model_path = os.path.join(current_app.config['MODEL_PATH'], "model_93_acc.pt")
+        logger.info(f"Loading video model from: {model_path}")
+
+        # Check if model file exists
+        if not os.path.exists(model_path):
+            logger.error(f"Video model file not found at: {model_path}")
+            return
+
+        video_service = VideoService(model_path)
+        logger.info("Video model loaded successfully.")
+    except Exception as e:
+        logger.error(f"Failed to initialize video model: {str(e)}", exc_info=True)
 
 @video_bp.route('/predict', methods=['POST'])
 def predict():
     try:
         logger.info("Received video prediction request")
-        
+
+        if video_service is None:
+            logger.error("Video service not initialized")
+            return jsonify({"error": "Video service not initialized"}), 500
+
         if 'video' not in request.files:
             logger.warning("No video file in request")
             return jsonify({"error": "No video file provided"}), 400
@@ -42,10 +55,10 @@ def predict():
         try:
             # Process the video
             result = video_service.predict(video_path)
-            
+
             # Clean up the uploaded file
             os.remove(video_path)
-            
+
             return jsonify(result)
         except Exception as e:
             # Clean up the uploaded file in case of error
