@@ -35,9 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN useradd -m -u 1000 appuser
-
 # Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
 
@@ -51,15 +48,8 @@ COPY --chown=appuser:appuser . .
 RUN mkdir -p /app/logs /app/uploads \
     && chown -R appuser:appuser /app
 
-# Switch to non-root user
-USER appuser
-
 # Expose port
 EXPOSE 8000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/api/health || exit 1
 
 # Run the application
 CMD ["python", "-m", "waitress", "--listen=0.0.0.0:8000", "app.main:app"]
