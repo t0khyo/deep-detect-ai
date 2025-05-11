@@ -29,7 +29,7 @@ def create_app():
     
     # Initialize models
     init_signature_model()
-    init_video_model()
+    init_video_model(config)
     
     # Health check endpoint
     @app.route(f'{config.API_PREFIX}/health', methods=['GET'])

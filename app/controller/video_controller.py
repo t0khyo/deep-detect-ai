@@ -9,10 +9,10 @@ video_bp = Blueprint('video', __name__)
 
 video_service = None
 
-def init_video_model():
+def init_video_model(config):
     try:
         global video_service
-        model_path = os.path.join(current_app.config['MODEL_PATH'], "model_93_acc.pt")
+        model_path = os.path.join(config['MODEL_PATH'], "model_93_acc.pt")
         logger.info(f"Loading video model from: {model_path}")
 
         # Check if model file exists
