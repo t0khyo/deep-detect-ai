@@ -5,6 +5,7 @@ from app.config.logging_config import setup_logging
 from app.utils.error_handlers import register_error_handlers
 from app.controller.signature_controller import signature_bp, init_signature_model
 from app.controller.video_controller import video_bp, init_video_model
+from app.controller.audio_controller import audio_bp, init_audio_model
 
 # Setup logging
 logger = setup_logging()
@@ -26,10 +27,12 @@ def create_app():
     # Register blueprints
     app.register_blueprint(signature_bp, url_prefix=f'{config.API_PREFIX}/signature')
     app.register_blueprint(video_bp, url_prefix=f'{config.API_PREFIX}/video')
+    app.register_blueprint(audio_bp, url_prefix=f'{config.API_PREFIX}/audio')
     
     # Initialize models
     init_signature_model()
     init_video_model(config)
+    init_audio_model(config)
     
     # Health check endpoint
     @app.route(f'{config.API_PREFIX}/health', methods=['GET'])
