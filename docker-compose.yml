@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   deep-detect-ai:
     build: .
@@ -10,6 +8,7 @@ services:
       - "8000:8000"
     volumes:
       - ./uploads:/app/uploads
+      - ./logs:/home/deep-detect-ai/logs
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=your-secret-key-here
@@ -19,7 +18,3 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-
-networks:
-  deep-detect-network:
-    external: true 
