@@ -126,7 +126,7 @@ class VideoService:
             T.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-    def predict(self, video_path, sequence_length=20):
+    def predict(self, video_path, sequence_length=100):
         try:
             video_dataset = VideoDataset(
                 video_path,
