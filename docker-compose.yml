@@ -21,4 +21,4 @@ services:
 networks:
   deep-detect-network:
     name: deep-detect-network
-    driver: bridge
+    external: true

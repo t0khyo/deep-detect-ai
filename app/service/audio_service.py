@@ -2,7 +2,6 @@ import os
 import joblib
 import librosa
 import numpy as np
-from pydub import AudioSegment
 from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler
 
@@ -13,19 +12,8 @@ class AudioService:
 
     def extract_features(self, file_path: str, sample_rate: int = None, augment: bool = False, is_real: bool = False) -> np.ndarray:
         try:
-            if file_path.endswith('.mp3'):
-                try:
-                    audio = AudioSegment.from_mp3(file_path)
-                    temp_wav_path = os.path.join(os.path.dirname(file_path), os.path.basename(file_path).replace('.mp3', '_temp.wav'))
-                    audio.export(temp_wav_path, format='wav')
-                    file_path = temp_wav_path
-                except Exception as mp3_error:
-                    raise ValueError(f"Failed to decode .mp3 file - {str(mp3_error)}")
-            
+            # Load audio file directly with librosa
             audio, sr = librosa.load(file_path, sr=sample_rate)
-            
-            if file_path.endswith('_temp.wav'):
-                os.remove(file_path)
             
             if augment:
                 noise = np.random.normal(0, 0.015, audio.shape)
