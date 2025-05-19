@@ -6,7 +6,6 @@ numpy
 Pillow
 opencv-python
 librosa
-pydub
 xgboost
 scikit-learn
 joblib
